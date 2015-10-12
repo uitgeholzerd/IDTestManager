@@ -29,9 +29,15 @@ public class UserService implements UserDetailsService{
     public List<Role> getRoles() {
         return this.userRepository.getRoles();
     }
+    public List<Permission> getPermissions() {
+        return this.userRepository.getPermissions();
+    }
 
     public void add(final User user) {
         this.userRepository.addUser(user);
+    }
+    public void add(final Role role) {
+        this.userRepository.addRole(role);
     }
 
     @Override

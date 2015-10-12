@@ -1,10 +1,83 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+    <title>User Administration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css"/>
 </head>
+
 <body>
 
+<h1 th:text="#{admin.roles}"/>
+<table>
+    <tr>
+        <th th:text="#{admin.role}"/>
+        <th th:text="#{admin.permission}"/>
+    </tr>
+    <tr th:each="role:${allRoles}">
+        <td th:text="${role.name}"/>
+        <td>
+            <table>
+                <tr th:each="perm: ${role.permissions}">
+                    <td th:text="${perm.name}"/>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<h2 th:text="#{admin.addrole}"/>
+
+<form action="#" th:action="@{/admin}" th:object="${newRole}" method="post">
+    <label for="roleName" th:text="#{admin.name}"/><input type="text" id="roleName" th:field="*{name}"/><br/>
+    <em th:text="#{admin.permissions}" />
+    <ul>
+        <li th:each="perm: ${allPermissions}">
+            <input type="checkbox" th:field="*{permissions}" th:value="${perm}"/>
+            <label th:for="${#ids.prev('permissions')}" th:text="${perm.name}" />
+        </li>
+
+    </ul>
+
+    <input type="submit" th:value="#{admin.save}" name="role"/>
+</form>
+
+<h1 th:text="#{admin.user}"/>
+
+<table>
+    <tr>
+        <th>NAME</th>
+        <th>ROLES</th>
+    </tr>
+    <tr th:each="user : ${allUsers}">
+        <td th:text="${user.firstName} + ' ' + ${user.lastName}"/>
+        <td>
+            <table>
+                <tr th:each="role : ${user.roles}">
+                    <td th:text="${role.name}"/>
+                </tr>
+            </table>
+        </td>
+
+    </tr>
+</table>
+<h2 th:text="#{admin.adduser}"/>
+
+<form action="#" th:action="@{/admin}" th:object="${newUser}" method="post">
+    <label for="userName" th:text="#{admin.userName}"/><input type="text" id="userName" th:field="*{userName}"/><br/>
+    <label for="password" th:text="#{admin.password}"/><input id="password" type="text" th:field="*{password}"/><br/>
+    <label for="firstName" th:text="#{admin.firstName}"/><input id="firstName" type="text" th:field="*{firstName}"/><br/>
+    <label for="lastName" th:text="#{admin.lastName}"/><input id="lastName" type="text" th:field="*{lastName}"/><br/>
+    <em th:text="#{admin.roles}" />
+    <ul>
+        <li th:each="role: ${allRoles}">
+            <input type="checkbox" th:field="*{roles}" th:value="${role}"/>
+            <label th:for="${#ids.prev('roles')}" th:text="${role.name}" />
+        </li>
+
+    </ul>
+
+    <input type="submit" th:value="#{admin.save}" name="user"/>
+</form>
 </body>
 </html>
