@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>User Administration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -33,7 +33,7 @@
     <em th:text="#{admin.permissions}" />
     <ul>
         <li th:each="perm: ${allPermissions}">
-            <input type="checkbox" th:field="*{permissions}" th:value="${perm}"/>
+            <input type="checkbox" th:field="*{permissions}" th:value="${perm.name}"/>
             <label th:for="${#ids.prev('permissions')}" th:text="${perm.name}" />
         </li>
 
