@@ -12,10 +12,14 @@ public class User {
     private String password;
     private List<Role> roles;
 
+    public User() {}
+
+
     public User(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
+
 
     public User(String userName, String password, String firstName, String lastName) {
         this.userName = userName;

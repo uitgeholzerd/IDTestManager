@@ -71,7 +71,7 @@
     <em th:text="#{admin.roles}" />
     <ul>
         <li th:each="role: ${allRoles}">
-            <input type="checkbox" th:field="*{roles}" th:value="${role}"/>
+            <input type="checkbox" th:field="*{roles}" th:value="${role.name}"/>
             <label th:for="${#ids.prev('roles')}" th:text="${role.name}" />
         </li>
 
