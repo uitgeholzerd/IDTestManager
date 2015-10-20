@@ -25,7 +25,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Locale;
 
 @SpringBootApplication
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled=true)
 public class IdTestManagerApplication extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) {
