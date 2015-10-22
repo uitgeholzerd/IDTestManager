@@ -3,6 +3,8 @@ package be.ua.iw.ei.se.controller;
 import be.ua.iw.ei.se.model.Permission;
 import be.ua.iw.ei.se.model.Role;
 import be.ua.iw.ei.se.model.User;
+import be.ua.iw.ei.se.service.PermissionService;
+import be.ua.iw.ei.se.service.RoleService;
 import be.ua.iw.ei.se.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,19 +24,24 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private PermissionService permissionService;
     @ModelAttribute("allUsers")
-    public List<User> populateUsers() {
+    public Iterable<User> populateUsers() {
         return this.userService.findAll();
     }
 
     @ModelAttribute("allRoles")
-    public List<Role> populateRoles() {
-        return this.userService.getRoles();
+    public Iterable<Role> populateRoles() {
+        return this.roleService.findAll();
     }
 
     @ModelAttribute("allPermissions")
-    public List<Permission> populatePermissions() {
-        return this.userService.getPermissions();
+    public Iterable<Permission> populatePermissions() {
+        return this.permissionService.findAll();
     }
 
     @ModelAttribute("newUser")
@@ -68,7 +75,7 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             return "error";
         }
-        this.userService.add(role);
+        this.roleService.add(role);
         model.clear();
         return "redirect:/admin";
     }

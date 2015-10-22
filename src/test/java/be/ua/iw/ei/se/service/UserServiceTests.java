@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTests {
     @InjectMocks
-    UserService userService;
+    SecurityService securityService;
 
     @Mock
     private UserRepository userRepository;
@@ -64,12 +64,12 @@ public class UserServiceTests {
     @Test(expected = UsernameNotFoundException.class)
     public void nonExistingUsernameTest() {
         when(userRepository.findAll()).thenReturn(userList);
-        userService.loadUserByUsername("bla");
+        securityService.loadUserByUsername("bla");
     }
     @Test
     public void loadedAuthoritiesTest(){
         when(userRepository.findAll()).thenReturn(userList);
-        UserDetails testUser = userService.loadUserByUsername("username");
+        UserDetails testUser = securityService.loadUserByUsername("username");
         assertTrue(!testUser.getAuthorities().isEmpty());
     }
 }

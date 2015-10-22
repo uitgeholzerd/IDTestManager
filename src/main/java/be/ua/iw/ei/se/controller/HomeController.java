@@ -5,6 +5,7 @@ import be.ua.iw.ei.se.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,8 +21,10 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
+
+
     @ModelAttribute("allUsers")
-    public List<User> populateUsers() {
+    public Iterable<User> populateUsers() {
         return this.userService.findAll();
     }
 

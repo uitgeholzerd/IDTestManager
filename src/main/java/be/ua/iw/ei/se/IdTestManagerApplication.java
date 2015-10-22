@@ -1,10 +1,12 @@
 package be.ua.iw.ei.se;
 
 import be.ua.iw.ei.se.service.UserService;
+import org.h2.server.web.WebServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -14,6 +16,7 @@ import org.springframework.security.config.annotation.authentication.configurers
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.util.AntPathRequestMatcher;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -42,6 +45,13 @@ public class IdTestManagerApplication extends WebMvcConfigurerAdapter {
         LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
         lci.setParamName("lang");
         return lci;
+
+    }
+    @Bean
+    ServletRegistrationBean h2servletRegistration(){
+        ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
+        registrationBean.addUrlMappings("/console/*");
+        return registrationBean;
     }
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -53,27 +63,31 @@ public class IdTestManagerApplication extends WebMvcConfigurerAdapter {
             GlobalAuthenticationConfigurerAdapter {
 
         @Autowired
-        private UserService userService;
+        private UserDetailsService securityService;
 
         @Override
         public void init(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(userService);
+            auth.userDetailsService(securityService);
         }
     }
+
     @Bean
     public ApplicationSecurity applicationSecurity() {
         return new ApplicationSecurity();
     }
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
-
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+            http.authorizeRequests().antMatchers("/").permitAll().and()
+                    .authorizeRequests().antMatchers("/console").permitAll();
             http.authorizeRequests().antMatchers("/login").permitAll().anyRequest()
                     .fullyAuthenticated().and().formLogin().loginPage("/login")
                     .failureUrl("/login?error").and().logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).and()
                     .exceptionHandling().accessDeniedPage("/access?error");
+            http.csrf().disable();
+            http.headers().frameOptions().disable();
         }
     }
 
@@ -81,6 +95,7 @@ public class IdTestManagerApplication extends WebMvcConfigurerAdapter {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/access").setViewName("access");
+        registry.addViewController("/admin").setViewName("admin");
     }
 
 }

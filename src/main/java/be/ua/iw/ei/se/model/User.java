@@ -1,25 +1,38 @@
 package be.ua.iw.ei.se.model;
 
+import org.springframework.data.jpa.domain.AbstractPersistable;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import java.util.List;
 
 /**
  * Created by seb on 10/8/2015.
  */
-public class User {
+@Entity
+public class User extends AbstractPersistable<Long> {
+    @ManyToMany
+    @JoinTable(
+            name="USER_ROLE",
+            joinColumns={@JoinColumn(name="USER_ID",
+                    referencedColumnName="ID")},
+            inverseJoinColumns={@JoinColumn(name="ROLE_ID",
+                    referencedColumnName="ID")})
+    private List<Role> roles;
+
     private String firstName;
     private String lastName;
     private String userName;
     private String password;
-    private List<Role> roles;
 
     public User() {}
-
 
     public User(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
-
 
     public User(String userName, String password, String firstName, String lastName) {
         this.userName = userName;
